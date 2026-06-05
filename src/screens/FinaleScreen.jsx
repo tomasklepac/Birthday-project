@@ -129,8 +129,10 @@ export default function FinaleScreen({ onRestart }) {
       </div>
 
       {/* Pivní emoji řada */}
-      <div style={{ color: '#f2c14e', fontSize: '16px', letterSpacing: '3px', zIndex: 1, flexWrap: 'wrap', display: 'flex', justifyContent: 'center', maxWidth: '280px' }}>
-        🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺🍺
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px', justifyContent: 'center', maxWidth: '280px', zIndex: 1 }}>
+        {Array.from({ length: 23 }, (_, i) => (
+          <span key={i} style={{ fontSize: '16px' }}>🍺</span>
+        ))}
       </div>
 
       {/* Narozeninové přání */}
@@ -169,7 +171,7 @@ export default function FinaleScreen({ onRestart }) {
       {/* Tlačítko */}
       <div style={{ zIndex: 1, paddingBottom: '8px' }}>
         <PixelButton onClick={onRestart} color="#c4850f" textColor="#fff">
-          JEŠTĚ JEDNO KOLO
+          JESTE JEDNO KOLO
         </PixelButton>
       </div>
     </div>
