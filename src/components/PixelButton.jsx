@@ -8,7 +8,7 @@ export default function PixelButton({ children, onClick, color = '#f2c14e', text
       onPointerDown={() => setPressed(true)}
       onPointerUp={() => { setPressed(false); onClick?.(); }}
       onPointerLeave={() => setPressed(false)}
-      lang="en"
+      translate="no"
       spellCheck={false}
       autoCorrect="off"
       autoCapitalize="off"

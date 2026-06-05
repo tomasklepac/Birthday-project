@@ -16,6 +16,8 @@ body {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   user-select: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .font-title {

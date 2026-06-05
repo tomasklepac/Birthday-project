@@ -171,7 +171,7 @@ export default function FinaleScreen({ onRestart }) {
       {/* Tlačítko */}
       <div style={{ zIndex: 1, paddingBottom: '8px' }}>
         <PixelButton onClick={onRestart} color="#c4850f" textColor="#fff">
-          JESTE JEDNO KOLO
+          JEŠTĚ JEDNO KOLO
         </PixelButton>
       </div>
     </div>
