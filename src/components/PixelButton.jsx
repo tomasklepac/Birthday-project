@@ -8,6 +8,10 @@ export default function PixelButton({ children, onClick, color = '#f2c14e', text
       onPointerDown={() => setPressed(true)}
       onPointerUp={() => { setPressed(false); onClick?.(); }}
       onPointerLeave={() => setPressed(false)}
+      lang="en"
+      spellCheck={false}
+      autoCorrect="off"
+      autoCapitalize="off"
       style={{
         fontFamily: "'Press Start 2P', monospace",
         fontSize: '10px',
@@ -17,6 +21,8 @@ export default function PixelButton({ children, onClick, color = '#f2c14e', text
         padding: '10px 16px',
         cursor: 'pointer',
         outline: 'none',
+        appearance: 'none',
+        WebkitAppearance: 'none',
         boxShadow: pressed ? 'none' : `3px 3px 0 rgba(0,0,0,0.6)`,
         transform: pressed ? 'translate(3px, 3px)' : 'none',
         imageRendering: 'pixelated',
