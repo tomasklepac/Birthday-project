@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const CARD_IMAGES = [
   '/tacky/gambinus.png',
@@ -59,7 +59,82 @@ function CoasterBack() {
   );
 }
 
+function CardFront({ card, isMatched }) {
+  return (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      background: '#f5ede0',
+      border: `3px solid ${isMatched ? '#5fa85a' : '#c4850f'}`,
+      boxShadow: isMatched
+        ? '0 0 10px #5fa85a55, 3px 3px 0 rgba(0,0,0,0.4)'
+        : '3px 3px 0 rgba(0,0,0,0.4)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '5px',
+      boxSizing: 'border-box',
+      overflow: 'hidden',
+      position: 'relative',
+    }}>
+      <div style={{
+        position: 'absolute', inset: '3px',
+        border: '1px solid #d4a860',
+        boxSizing: 'border-box',
+        pointerEvents: 'none',
+      }} />
+      {card.imgOk ? (
+        <img
+          src={card.src}
+          alt=""
+          style={{
+            width: '80%',
+            height: '80%',
+            objectFit: 'contain',
+            imageRendering: 'auto',
+            display: 'block',
+          }}
+        />
+      ) : (
+        <div style={{
+          width: '42px', height: '42px',
+          background: FALLBACK_COLORS[card.pairIndex],
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '20px',
+        }}>🍺</div>
+      )}
+    </div>
+  );
+}
+
 function Card({ card, isFlipped, isMatched, onClick }) {
+  const targetFront = isFlipped || isMatched;
+  const [visibleFront, setVisibleFront] = useState(targetFront);
+  const [phase, setPhase] = useState('idle'); // 'idle' | 'out' | 'in'
+  const prevTarget = useRef(targetFront);
+
+  useEffect(() => {
+    if (targetFront !== prevTarget.current) {
+      prevTarget.current = targetFront;
+      setPhase('out');
+    }
+  }, [targetFront]);
+
+  const handleTransitionEnd = (e) => {
+    if (e.propertyName !== 'transform' && e.propertyName !== '-webkit-transform') return;
+    if (phase === 'out') {
+      setVisibleFront(targetFront);
+      setPhase('in');
+    } else if (phase === 'in') {
+      setPhase('idle');
+    }
+  };
+
+  const scale = phase === 'out' ? 'scaleX(0)' : 'scaleX(1)';
+  const transition = phase !== 'idle'
+    ? `transform 0.19s ${phase === 'out' ? 'ease-in' : 'ease-out'}`
+    : 'none';
+
   return (
     <div
       onClick={() => !isFlipped && !isMatched && onClick(card.id)}
@@ -67,83 +142,24 @@ function Card({ card, isFlipped, isMatched, onClick }) {
         width: '70px',
         height: '70px',
         cursor: isFlipped || isMatched ? 'default' : 'pointer',
-        perspective: '300px',
-        WebkitPerspective: '300px',
         flexShrink: 0,
       }}
     >
-      {/* Flip wrapper - 3D */}
-      <div style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        transformStyle: 'preserve-3d',
-        WebkitTransformStyle: 'preserve-3d',
-        transition: 'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
-        WebkitTransition: 'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
-        transform: (isFlipped || isMatched) ? 'rotateY(180deg)' : 'rotateY(0deg)',
-        WebkitTransform: (isFlipped || isMatched) ? 'rotateY(180deg)' : 'rotateY(0deg)',
-      }}>
-        {/* RUB - tácek (viditelný dokud není otočený) */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-        }}>
-          <CoasterBack />
-        </div>
-
-        {/* LÍC - logo (viditelný po otočení) */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          transform: 'rotateY(180deg)',
-        }}>
-          <div style={{
-            width: '100%',
-            height: '100%',
-            background: '#f5ede0',
-            border: `3px solid ${isMatched ? '#5fa85a' : '#c4850f'}`,
-            boxShadow: isMatched
-              ? '0 0 10px #5fa85a55, 3px 3px 0 rgba(0,0,0,0.4)'
-              : '3px 3px 0 rgba(0,0,0,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '5px',
-            boxSizing: 'border-box',
-            overflow: 'hidden',
-            position: 'relative',
-          }}>
-            <div style={{
-              position: 'absolute', inset: '3px',
-              border: '1px solid #d4a860',
-              boxSizing: 'border-box',
-              pointerEvents: 'none',
-            }} />
-            {card.imgOk ? (
-              <img
-                src={card.src}
-                alt=""
-                style={{
-                  width: '80%',
-                  height: '80%',
-                  objectFit: 'contain',
-                  imageRendering: 'auto',
-                  display: 'block',
-                }}
-              />
-            ) : (
-              <div style={{
-                width: '42px', height: '42px',
-                background: FALLBACK_COLORS[card.pairIndex],
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '20px',
-              }}>🍺</div>
-            )}
-          </div>
-        </div>
+      <div
+        onTransitionEnd={handleTransitionEnd}
+        style={{
+          width: '100%',
+          height: '100%',
+          transform: scale,
+          WebkitTransform: scale,
+          transition,
+          WebkitTransition: transition.replace('transform', '-webkit-transform'),
+        }}
+      >
+        {visibleFront
+          ? <CardFront card={card} isMatched={isMatched} />
+          : <CoasterBack />
+        }
       </div>
     </div>
   );
