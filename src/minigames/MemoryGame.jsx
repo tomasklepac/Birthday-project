@@ -68,6 +68,7 @@ function Card({ card, isFlipped, isMatched, onClick }) {
         height: '70px',
         cursor: isFlipped || isMatched ? 'default' : 'pointer',
         perspective: '300px',
+        WebkitPerspective: '300px',
         flexShrink: 0,
       }}
     >
@@ -77,8 +78,11 @@ function Card({ card, isFlipped, isMatched, onClick }) {
         height: '100%',
         position: 'relative',
         transformStyle: 'preserve-3d',
+        WebkitTransformStyle: 'preserve-3d',
         transition: 'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
+        WebkitTransition: 'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
         transform: (isFlipped || isMatched) ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        WebkitTransform: (isFlipped || isMatched) ? 'rotateY(180deg)' : 'rotateY(0deg)',
       }}>
         {/* RUB - tácek (viditelný dokud není otočený) */}
         <div style={{
