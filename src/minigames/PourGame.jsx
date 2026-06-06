@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 const _aw = Math.min(window.innerWidth - 24, 420);
-const GLASS_H = Math.round(150 * Math.min(1.5, _aw / 320));
+const GLASS_SCALE = Math.min(1.5, _aw / 320);
 const IDEAL_MIN = 0.83;
 const IDEAL_MAX = 0.93;
 
@@ -161,7 +161,7 @@ export default function PourGame({ onComplete }) {
           pouring={pouring}
           bubbles={bubbles}
           drops={drops}
-          height={GLASS_H}
+          scale={GLASS_SCALE}
         />
       </div>
 
@@ -179,11 +179,9 @@ export default function PourGame({ onComplete }) {
   );
 }
 
-function BeerMug({ level, beerFill, foam, pouring, bubbles, drops, height }) {
-  // Půlitr - střed těla sklenice = střed SVG (ucho je navíc vpravo)
-  // W=108, bodyW=74 → BL = W/2 - bodyW/2 = 54-37 = 17 → body center = 54 = W/2 ✓
+function BeerMug({ level, beerFill, foam, pouring, bubbles, drops, scale = 1 }) {
   const W = 108;
-  const H = height;
+  const H = 150;
   const BL = 17;         // tělo vlevo (posunuté doprava aby bylo body vycentrované)
   const BR = 91;         // tělo vpravo (BL + 74)
   const BT = 8;
@@ -202,7 +200,7 @@ function BeerMug({ level, beerFill, foam, pouring, bubbles, drops, height }) {
   const showFoam = foam > 0.01 && beerFill > 0.10;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width={Math.round(W * H / 150)} height={H} shapeRendering="crispEdges">
+    <svg viewBox={`0 0 ${W} ${H}`} width={Math.round(W * scale)} height={Math.round(H * scale)} shapeRendering="crispEdges">
       {/* Pivní náplň */}
       {beerFill > 0 && (
         <>
