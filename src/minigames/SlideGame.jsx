@@ -16,6 +16,7 @@ const POWER_GRAD = `linear-gradient(to right,
 
 const PS2 = "'Press Start 2P', monospace";
 const VT = "'VT323', monospace";
+const SCENE_H = Math.min(Math.floor(window.innerHeight - 100), 520);
 
 export default function SlideGame({ onComplete }) {
   const [phase, setPhase] = useState('aim');
@@ -111,10 +112,12 @@ export default function SlideGame({ onComplete }) {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      justifyContent: 'flex-end',
       gap: '10px',
-      padding: '10px 10px 0',
+      padding: '0 10px 10px',
       userSelect: 'none',
-      width: '100%',
+      width: `${BAR_W}px`,
+      height: `${SCENE_H}px`,
       overflow: 'hidden',
     }}>
       {/* === PUB INTERIOR BACKGROUND === */}
