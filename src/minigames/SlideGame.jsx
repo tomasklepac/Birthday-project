@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 
-const BAR_W = 300;
-const BAR_H = 55;
-const GLASS_W = 22;
-const CUSTOMER_X = BAR_W - 40;
+const BAR_W = Math.min(Math.floor(window.innerWidth - 20), 390);
+const BAR_H = Math.round(55 * BAR_W / 300);
+const GLASS_W = Math.round(22 * BAR_W / 300);
+const CUSTOMER_X = Math.round(BAR_W * 260 / 300);
 
 export default function SlideGame({ onComplete }) {
   const [phase, setPhase] = useState('aim'); // aim | sliding | done
@@ -39,7 +39,7 @@ export default function SlideGame({ onComplete }) {
     phaseRef.current = 'sliding';
     cancelAnimationFrame(rafRef.current);
     const finalPower = powerRef.current;
-    const vel = (finalPower / 100) * 6.5;
+    const vel = (finalPower / 100) * 6.5 * (BAR_W / 300);
     setPhase('sliding');
 
     let x = 8;
@@ -79,11 +79,12 @@ export default function SlideGame({ onComplete }) {
     const offset = glassCenter - CUSTOMER_X;
     const dist = Math.abs(offset);
 
-    if (dist < 22) {
+    const hit = Math.round(22 * BAR_W / 300);
+    if (dist < hit) {
       // Přesně před zákazníka
       setReaction('happy');
       setSplash(false);
-    } else if (offset < 0 && dist < 55) {
+    } else if (offset < 0 && dist < hit * 2.5) {
       // Trochu kratší — zákazník se natáhne
       setReaction('stretch');
       setSplash(false);
@@ -98,10 +99,10 @@ export default function SlideGame({ onComplete }) {
     }
 
     let rating;
-    if (dist < 22) rating = 'perfect';
-    else if (offset < 0 && dist < 55) rating = 'weak';   // trochu krátký
-    else if (offset > 0) rating = 'strong';               // přestřeleno
-    else rating = 'weak';                                  // moc slabý = zákazník nedosáhl
+    if (dist < hit) rating = 'perfect';
+    else if (offset < 0 && dist < hit * 2.5) rating = 'weak';
+    else if (offset > 0) rating = 'strong';
+    else rating = 'weak';
     setTimeout(() => onComplete(rating), 900);
   }, [onComplete]);
 

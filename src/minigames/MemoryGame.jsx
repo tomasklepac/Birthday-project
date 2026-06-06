@@ -8,6 +8,7 @@ const CARD_IMAGES = [
 ];
 
 const FALLBACK_COLORS = ['#c4850f', '#5fa85a', '#4a78c0', '#e0524a'];
+const CARD_SIZE = Math.min(90, Math.max(66, Math.floor((window.innerWidth - 68) / 4)));
 
 function shuffle(arr) {
   const a = [...arr];
@@ -39,7 +40,7 @@ function CoasterBack() {
       }} />
       <div style={{ position: 'absolute', inset: '5px', border: '2px solid #8a6418', boxSizing: 'border-box' }} />
       <div style={{ position: 'absolute', inset: '9px', border: '1px solid #a07830', boxSizing: 'border-box' }} />
-      <svg viewBox="0 0 28 28" width="32" height="32" shapeRendering="crispEdges" style={{ position: 'relative', zIndex: 1 }}>
+      <svg viewBox="0 0 28 28" width={Math.round(CARD_SIZE * 0.46)} height={Math.round(CARD_SIZE * 0.46)} shapeRendering="crispEdges" style={{ position: 'relative', zIndex: 1 }}>
         <rect x="4" y="8" width="16" height="16" fill="#d4880a" />
         <rect x="3" y="8" width="1" height="16" fill="#a86010" />
         <rect x="20" y="8" width="1" height="16" fill="#a86010" />
@@ -97,7 +98,7 @@ function CardFront({ card, isMatched }) {
         />
       ) : (
         <div style={{
-          width: '42px', height: '42px',
+          width: `${Math.round(CARD_SIZE * 0.6)}px`, height: `${Math.round(CARD_SIZE * 0.6)}px`,
           background: FALLBACK_COLORS[card.pairIndex],
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '20px',
@@ -139,8 +140,8 @@ function Card({ card, isFlipped, isMatched, onClick }) {
     <div
       onClick={() => !isFlipped && !isMatched && onClick(card.id)}
       style={{
-        width: '70px',
-        height: '70px',
+        width: `${CARD_SIZE}px`,
+        height: `${CARD_SIZE}px`,
         cursor: isFlipped || isMatched ? 'default' : 'pointer',
         flexShrink: 0,
       }}
@@ -238,7 +239,7 @@ export default function MemoryGame({ onComplete }) {
       }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 70px)',
+          gridTemplateColumns: `repeat(4, ${CARD_SIZE}px)`,
           gap: '8px',
         }}>
           {cards.map(card => (

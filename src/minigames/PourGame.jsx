@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-const GLASS_H = 150;
+const _aw = Math.min(window.innerWidth - 24, 420);
+const GLASS_H = Math.round(150 * Math.min(1.5, _aw / 320));
 const IDEAL_MIN = 0.83;
 const IDEAL_MAX = 0.93;
 
@@ -86,7 +87,7 @@ export default function PourGame({ onComplete }) {
       {/* Pub interior background */}
       <div style={{
         width: '100%',
-        maxWidth: '340px',
+        maxWidth: `${_aw}px`,
         position: 'relative',
         background: '#1a100a',
         border: '3px solid #4f2f1b',
@@ -167,7 +168,7 @@ export default function PourGame({ onComplete }) {
       {/* Bar counter */}
       <div style={{
         width: '100%',
-        maxWidth: '340px',
+        maxWidth: `${_aw}px`,
         height: '20px',
         background: '#4f2f1b',
         border: '3px solid #6e4327',
@@ -201,7 +202,7 @@ function BeerMug({ level, beerFill, foam, pouring, bubbles, drops, height }) {
   const showFoam = foam > 0.01 && beerFill > 0.10;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} shapeRendering="crispEdges">
+    <svg viewBox={`0 0 ${W} ${H}`} width={Math.round(W * H / 150)} height={H} shapeRendering="crispEdges">
       {/* Pivní náplň */}
       {beerFill > 0 && (
         <>

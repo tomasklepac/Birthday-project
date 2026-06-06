@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const GAME_W = 300;
-const GAME_H = 240;
-const GLASS_W = 44;
-const STREAM_W = 10;
+const GAME_W = Math.min(Math.floor(window.innerWidth - 20), 390);
+const GAME_H = Math.round(240 * GAME_W / 300);
+const GLASS_W = Math.round(44 * GAME_W / 300);
+const STREAM_W = Math.round(10 * GAME_W / 300);
+const _R = GAME_W / 300;
 
 export default function CatchGame({ onComplete }) {
   const [glassX, setGlassX] = useState(10);
@@ -95,12 +96,12 @@ export default function CatchGame({ onComplete }) {
     return () => cancelAnimationFrame(rafRef.current);
   }, [onComplete]);
 
-  const glassH = 54;
+  const glassH = Math.round(54 * _R);
   const beerH = level * (glassH - 10);
 
   // Proud piva - nakloní se podle rychlosti pohybu
-  const streamTop = 18;
-  const streamBottom = GAME_H - 62;
+  const streamTop = Math.round(18 * _R);
+  const streamBottom = GAME_H - Math.round(62 * _R);
   const streamHeight = streamBottom - streamTop;
   // Naklopení: čím rychleji se proud pohybuje, tím víc se vlní
   // Proud zaostává za pipou — opačný směr než pohyb (fyzika vlajky za sebou)
@@ -148,7 +149,7 @@ export default function CatchGame({ onComplete }) {
         {/* Disco lights */}
         {[20,60,120,180,240,280].map((lx,i) => (
           <div key={i} style={{
-            position: 'absolute', top: 0, left: `${lx}px`,
+            position: 'absolute', top: 0, left: `${Math.round(lx * _R)}px`,
             width: '8px', height: '8px',
             background: ['#e0524a','#4a78c0','#f2c14e','#5fa85a','#aa44cc','#f2c14e'][i],
             opacity: 0.8,
@@ -157,21 +158,24 @@ export default function CatchGame({ onComplete }) {
         ))}
 
         {/* Crowd silhouettes */}
-        <svg style={{ position: 'absolute', bottom: '60px', left: 0, width: '100%' }}
-          viewBox="0 0 300 40" shapeRendering="crispEdges" preserveAspectRatio="none">
-          {[10,30,55,75,100,125,150,170,195,215,240,260,285].map((cx,i) => (
-            <g key={i}>
-              <circle cx={cx} cy="22" r="6" fill="#111118" />
-              <rect x={cx-5} y="28" width="10" height="12" fill="#111118" />
-              {i % 3 === 0 ? (
-                <><line x1={cx-5} y1="30" x2={cx-10} y2="20" stroke="#111118" strokeWidth="3" />
-                  <line x1={cx+5} y1="30" x2={cx+10} y2="20" stroke="#111118" strokeWidth="3" /></>
-              ) : (
-                <><line x1={cx-5} y1="30" x2={cx-9} y2="35" stroke="#111118" strokeWidth="3" />
-                  <line x1={cx+5} y1="30" x2={cx+9} y2="35" stroke="#111118" strokeWidth="3" /></>
-              )}
-            </g>
-          ))}
+        <svg style={{ position: 'absolute', bottom: `${Math.round(60 * _R)}px`, left: 0, width: '100%' }}
+          viewBox={`0 0 ${GAME_W} 40`} shapeRendering="crispEdges" preserveAspectRatio="none">
+          {[10,30,55,75,100,125,150,170,195,215,240,260,285].map((cx,i) => {
+            const scx = Math.round(cx * GAME_W / 300);
+            return (
+              <g key={i}>
+                <circle cx={scx} cy="22" r="6" fill="#111118" />
+                <rect x={scx-5} y="28" width="10" height="12" fill="#111118" />
+                {i % 3 === 0 ? (
+                  <><line x1={scx-5} y1="30" x2={scx-10} y2="20" stroke="#111118" strokeWidth="3" />
+                    <line x1={scx+5} y1="30" x2={scx+10} y2="20" stroke="#111118" strokeWidth="3" /></>
+                ) : (
+                  <><line x1={scx-5} y1="30" x2={scx-9} y2="35" stroke="#111118" strokeWidth="3" />
+                    <line x1={scx+5} y1="30" x2={scx+9} y2="35" stroke="#111118" strokeWidth="3" /></>
+                )}
+              </g>
+            );
+          })}
         </svg>
 
         {/* Music notes */}
@@ -185,8 +189,8 @@ export default function CatchGame({ onComplete }) {
 
         {/* Výčepní kohout - pohybující se nahoře */}
         <div style={{
-          position: 'absolute', top: 0, left: `${streamX - 22}px`,
-          width: '44px', height: '18px',
+          position: 'absolute', top: 0, left: `${streamX - Math.round(22 * _R)}px`,
+          width: `${Math.round(44 * _R)}px`, height: `${Math.round(18 * _R)}px`,
           background: '#3d1f0d', border: '2px solid #6e4327',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5,
         }}>
@@ -242,7 +246,7 @@ export default function CatchGame({ onComplete }) {
 
         {/* Bar counter */}
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px',
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: `${Math.round(60 * _R)}px`,
           background: '#3d1f0d', borderTop: '3px solid #6e4327',
         }}>
           {[15,30,45].map(y => (
@@ -297,7 +301,7 @@ export default function CatchGame({ onComplete }) {
         {/* Fill indicator */}
         <div style={{
           position: 'absolute', top: '20px', right: '6px',
-          width: '8px', height: '70px',
+          width: '8px', height: `${Math.round(70 * _R)}px`,
           background: '#12131f', border: '2px solid #444455', zIndex: 10,
         }}>
           <div style={{
