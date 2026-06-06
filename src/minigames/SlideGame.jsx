@@ -108,7 +108,8 @@ export default function SlideGame({ onComplete }) {
 
   return (
     <div style={{
-      position: 'relative',
+      position: 'absolute',
+      inset: 0,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -116,8 +117,6 @@ export default function SlideGame({ onComplete }) {
       gap: '10px',
       padding: '0 10px 10px',
       userSelect: 'none',
-      width: `${BAR_W}px`,
-      height: `${SCENE_H}px`,
       overflow: 'hidden',
     }}>
       {/* === PUB INTERIOR BACKGROUND === */}
