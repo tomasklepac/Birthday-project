@@ -9,7 +9,7 @@ export const PUBS = [
     praises: {
       good: 'Hostinský by ti záviděl! Perfektní pěna',
       ok: 'Ujde to, Lokál tě bere!',
-      over: 'No, na učňák to ještě chce trénink, ale vypije se!',
+      over: 'Moc plná! Pěna by taky chtěla místo.',
     },
     transition: '+6 piv! První štace za tebou. Hurá na Pivoňku!',
   },
